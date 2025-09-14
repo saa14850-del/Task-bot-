@@ -1,12 +1,9 @@
 import os
 import telebot
 
-# Render থেকে Environment Variable থেকে বট টোকেন নেবে
-API_TOKEN = os.getenv("BOT_TOKEN")
-
+API_TOKEN = os.getenv("BOT_TOKEN")  # GitHub Secrets থেকে নেওয়া হবে
 bot = telebot.TeleBot(API_TOKEN)
 
-# সব ইউজারের টাস্ক আলাদা করে রাখার জন্য Dictionary
 tasks = {}
 
 # Start কমান্ড
@@ -14,8 +11,7 @@ tasks = {}
 def send_welcome(message):
     bot.reply_to(
         message,
-        "👋 Assalamu Alaikum!\n"
-        "আমি তোমার Task Manager Bot.\n\n"
+        "👋 Assalamu Alaikum!\nআমি তোমার Task Manager Bot.\n\n"
         "📝 কমান্ডসমূহ:\n"
         "/add <টাস্ক> → নতুন টাস্ক যোগ করো\n"
         "/list → সব টাস্ক দেখো\n"
@@ -27,14 +23,11 @@ def send_welcome(message):
 def add_task(message):
     chat_id = message.chat.id
     task_text = message.text.replace("/add", "").strip()
-
     if not task_text:
         bot.reply_to(message, "⚠️ টাস্ক লিখো, যেমনঃ `/add বাজার করতে হবে`")
         return
-
     if chat_id not in tasks:
         tasks[chat_id] = []
-
     tasks[chat_id].append(task_text)
     bot.reply_to(message, f"✅ টাস্ক যোগ করা হলো:\n{task_text}")
 
