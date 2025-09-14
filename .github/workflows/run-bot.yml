@@ -1,27 +1,31 @@
-name: Run Telegram Bot (Test)
+name: Run Telegram Bot
 
 on:
-  workflow_dispatch:   # হাতে চালানোর জন্য
   push:
     branches:
-      - main          # main branch এ push করলে রান হবে
+      - main
+  workflow_dispatch:
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
 
-      - name: Run bot
+      - name: Run Bot
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: python task_bot.py
+        run: |
+          echo "Running Telegram Bot 🚀"
+          python task_bot.py
