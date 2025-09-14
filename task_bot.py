@@ -1,61 +1,35 @@
-import os
 import telebot
+import os
 
-API_TOKEN = os.getenv("BOT_TOKEN")  # GitHub Secrets থেকে নেওয়া হবে
+# GitHub Secrets থেকে Bot Token নেবে
+API_TOKEN = os.getenv("BOT_TOKEN")
+
 bot = telebot.TeleBot(API_TOKEN)
 
-tasks = {}
-
-# Start কমান্ড
+# /start command
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(
-        message,
-        "👋 Assalamu Alaikum!\nআমি তোমার Task Manager Bot.\n\n"
-        "📝 কমান্ডসমূহ:\n"
-        "/add <টাস্ক> → নতুন টাস্ক যোগ করো\n"
-        "/list → সব টাস্ক দেখো\n"
-        "/done <নাম্বার> → টাস্ক সম্পন্ন করো"
-    )
+    bot.reply_to(message, "আসসালামু আলাইকুম! ✅ তোমার Task Manager Bot GitHub Actions থেকে চলছে 🚀")
 
-# টাস্ক যোগ করা
-@bot.message_handler(commands=['add'])
-def add_task(message):
-    chat_id = message.chat.id
-    task_text = message.text.replace("/add", "").strip()
-    if not task_text:
-        bot.reply_to(message, "⚠️ টাস্ক লিখো, যেমনঃ `/add বাজার করতে হবে`")
-        return
-    if chat_id not in tasks:
-        tasks[chat_id] = []
-    tasks[chat_id].append(task_text)
-    bot.reply_to(message, f"✅ টাস্ক যোগ করা হলো:\n{task_text}")
+# /help command
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    bot.reply_to(message, "Available commands:\n/start - Welcome\n/help - Help\n/echo <text> - Echo back")
 
-# সব টাস্ক দেখানো
-@bot.message_handler(commands=['list'])
-def list_tasks(message):
-    chat_id = message.chat.id
-    if chat_id not in tasks or len(tasks[chat_id]) == 0:
-        bot.reply_to(message, "📭 কোনো টাস্ক নেই।")
+# /echo command
+@bot.message_handler(commands=['echo'])
+def echo_message(message):
+    text = message.text.replace("/echo", "").strip()
+    if text:
+        bot.reply_to(message, f"তুমি লিখেছো: {text}")
     else:
-        task_list = ""
-        for i, task in enumerate(tasks[chat_id], 1):
-            task_list += f"{i}. {task}\n"
-        bot.reply_to(message, f"📌 তোমার টাস্ক লিস্ট:\n\n{task_list}")
+        bot.reply_to(message, "⚠️ কিছু লিখে দাও /echo এর পরে।")
 
-# টাস্ক Done করা
-@bot.message_handler(commands=['done'])
-def done_task(message):
-    chat_id = message.chat.id
-    try:
-        task_number = int(message.text.replace("/done", "").strip()) - 1
-        if 0 <= task_number < len(tasks[chat_id]):
-            done_task = tasks[chat_id].pop(task_number)
-            bot.reply_to(message, f"🎉 সম্পন্ন হয়েছে:\n{done_task}")
-        else:
-            bot.reply_to(message, "⚠️ টাস্ক নাম্বার সঠিক নয়।")
-    except:
-        bot.reply_to(message, "❌ উদাহরণ: `/done 1`")
+# fallback
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, f"তুমি লিখেছো: {message.text}")
 
-print("🤖 Bot is running...")
-bot.polling()
+if __name__ == "__main__":
+    bot.remove_webhook()  # webhook conflict avoid করবে
+    bot.polling(non_stop=True)
