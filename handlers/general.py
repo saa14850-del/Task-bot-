@@ -12,7 +12,7 @@ Advanced Rose Bot Commands:
 /lock <feature> - Lock feature
 /unlock <feature> - Unlock feature
 /rules - Show group rules
-Custom commands are defined in settings.json
+Custom commands defined in settings.json
         """
         bot.send_message(message.chat.id, text)
 
