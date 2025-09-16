@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Local development only
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-ADMINS = [7891208589]  # এখানে তোমার  আইডি 
+ADMINS = [int(os.environ.get("ADMIN_ID"))]
+GROUP_ID = int(os.environ.get("GROUP_ID"))
