@@ -66,4 +66,10 @@ def register(bot):
                 save_settings()
                 bot.send_message(message.chat.id, f"{feature} unlocked!")
             except:
+                bot.send_message(message.chat.id, "Usage: /unlock <feature>")            try:
+                feature = message.text.split()[1]
+                settings["locks"][feature] = "off"
+                save_settings()
+                bot.send_message(message.chat.id, f"{feature} unlocked!")
+            except:
                 bot.send_message(message.chat.id, "Usage: /unlock <feature>")
