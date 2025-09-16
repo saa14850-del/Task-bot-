@@ -1,9 +1,12 @@
 import json
+import os
 
-with open("settings.json", "r", encoding="utf-8") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # database.py location
+SETTINGS_PATH = os.path.join(BASE_DIR, "settings.json")
+
+with open(SETTINGS_PATH, "r", encoding="utf-8") as f:
     settings = json.load(f)
 
-# Warn tracking in memory
 warns = {}  # {chat_id: {user_id: count}}
 
 def get_welcome():
@@ -22,5 +25,5 @@ def get_custom_response(command):
     return settings.get("custom_commands", {}).get(command.lower())
 
 def save_settings():
-    with open("settings.json", "w", encoding="utf-8") as f:
+    with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
         json.dump(settings, f, ensure_ascii=False, indent=4)
