@@ -1,7 +1,7 @@
 from database import get_rules, get_custom_response
 
 def register(bot):
-    @bot.message_handler(commands=['start','help'])
+    @bot.message_handler(commands=['start','help'], chat_types=['private','group','supergroup'])
     def start_help(message):
         text = """
 Advanced Rose Bot Commands:
@@ -16,11 +16,11 @@ Custom commands defined in settings.json
         """
         bot.send_message(message.chat.id, text)
 
-    @bot.message_handler(commands=['rules'])
+    @bot.message_handler(commands=['rules'], chat_types=['private','group','supergroup'])
     def rules(message):
         bot.send_message(message.chat.id, get_rules())
 
-    @bot.message_handler(func=lambda m: True)
+    @bot.message_handler(func=lambda m: True, chat_types=['private','group','supergroup'])
     def auto_response(message):
         text = message.text or ""
         if text.startswith("/"):
