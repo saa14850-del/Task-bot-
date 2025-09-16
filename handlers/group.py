@@ -13,7 +13,6 @@ def register(bot):
         chat_warns = warns.setdefault(message.chat.id, {})
         user_id = message.from_user.id
 
-        # Anti-link
         if is_locked("link") and ("http://" in text or "https://" in text):
             bot.delete_message(message.chat.id, message.message_id)
             chat_warns[user_id] = chat_warns.get(user_id, 0) + 1
